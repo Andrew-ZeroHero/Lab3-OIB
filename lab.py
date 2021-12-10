@@ -21,6 +21,27 @@ secret_path = json_data["secret_key"]
 
 def key_generation(path_to_symmetric_key: str, path_to_public_key: str, path_to_secret_key: str) -> None:
 
+    symmetric_key = ChaCha20Poly1305.generate_key()
+
+    keys = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    privat_k = keys
+
+    privat_pem = privat_k.private_bytes(encoding=serialization.Encoding.PEM,
+                                        format=serialization.PrivateFormat.TraditionalOpenSSL,
+                                        encryption_algorithm=serialization.NoEncryption())
+    with open(path_to_secret_key, 'wb') as file:
+        file.write(privat_pem)
+
+    public_k = keys.public_key()
+    public_pem = public_k.public_bytes(encoding=serialization.Encoding.PEM,
+                                       format=serialization.PublicFormat.SubjectPublicKeyInfo)
+    with open(path_to_public_key, 'wb') as file:
+        file.write(public_pem)
+
+    enc_symmetrical_key = public_k.encrypt(symmetric_key, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                                                                       algorithm=hashes.SHA256(), label=None))
+    with open(path_to_symmetric_key, 'wb') as file:
+        file.write(enc_symmetrical_key)
 # Переделать!
 key = os.urandom(32)
 nonce = os.urandom(16)
