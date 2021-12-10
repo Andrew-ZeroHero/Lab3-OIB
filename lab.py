@@ -9,6 +9,19 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms
 
+with open('settings.json') as json_file:
+    json_data = json.load(json_file)
+
+initial_path = json_data["initial_file"]
+encrypted_path = json_data["encrypted_file"]
+decrypted_path = json_data["decrypted_file"]
+symmetric_path = json_data["symmetric_key"]
+public_path = json_data["public_key"]
+secret_path = json_data["secret_key"]
+
+def key_generation(path_to_symmetric_key: str, path_to_public_key: str, path_to_secret_key: str) -> None:
+
+# Переделать!
 key = os.urandom(32)
 nonce = os.urandom(16)
 print(type(key))
