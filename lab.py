@@ -1,6 +1,14 @@
 import os
 import pickle
-import random
+import json
+import argparse
+from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms
+
 key = os.urandom(32)
 nonce = os.urandom(16)
 print(type(key))
@@ -17,7 +25,6 @@ with open(file_name, 'wb') as nonce_file:
 txt_file = '/content/text.txt'
 with open(txt_file, 'rb') as read_file:
   text = read_file.read()
-  from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 algorithm = algorithms.ChaCha20(key, nonce)
 cipher = Cipher(algorithm, mode=None)
 encryptor = cipher.encryptor()
